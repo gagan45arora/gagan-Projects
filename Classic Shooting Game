@@ -1,0 +1,97 @@
+GlowScript 2.9 VPython
+x=0
+y=-3
+b=0
+i=0
+alt=0
+sh=0
+xb=0
+yb=0
+dx=0.03
+dxshit=0.08
+dxbullet=0.3
+pause=-1
+mybox = box(pos=vector(x,y,0), length=0.5, height=0.5, width=0)
+list = []
+y1=0.75
+ba = [1] * 24
+while(y1<2.5):
+    x1 = -3.5
+    y1 = y1 + 0.5
+    while(x1<2.4):
+        x1=x1+1
+        list.append(box(pos=vector(x1,y1,0),color=color.blue))
+        
+while(i<1000000):
+    rate(100)
+    i=i+1
+    if (sh==0):
+        sh=1
+        xshit = 6*random()-3
+        yshit=1
+        shit = sphere ( pos=vector(xshit,yshit,0), radius=0.25, color=color.red )
+    
+    if (sh==1):
+        shit.pos.y = shit.pos.y - dxshit
+        if (((x-shit.pos.x)**2+(y-shit.pos.y)**2)**0.5<0.5):
+                i=10000000000000
+                print("Game Over")
+                break
+        if (shit.pos.y <-3.1):
+            shit.visible = False
+            del shit
+            sh=0
+        
+    
+    k = keysdown()
+    
+    if 'up' in k: 
+        if(b!=1):
+            xb=x
+            yb=-3
+            bullet = sphere ( pos=vector(xb,yb,0), radius=0.25, color=color.green )
+            b=1   
+    if 'left' in k: 
+        x = x - dx
+        mybox.pos = pos=vector(x,y,0)
+    if 'right' in k: 
+        x=x+dx
+        mybox.pos = pos=vector(x,y,0)   
+    if 'down' in k and i-alt>100: 
+        pause = pause*(-1)
+        alt=i
+    if(pause==-1):
+        dx=0
+        dxshit=0
+        dxbullet=0
+    else:
+        dx=0.03
+        dxshit=0.08
+        dxbullet=0.3
+        
+    if (abs(x)>3):
+        x=-1*x
+    if(b==1):
+        yb=yb+dxbullet
+        bullet.pos = pos=vector(xb,yb,0)
+        if (yb>3):
+            bullet.visible = False
+            del bullet
+            b=0
+    j=0
+    if(yb>0.40):
+        while(j<24):
+            fax = (j%6) - 2.5
+            fay = 0.75 + (j//6)*0.5
+            if(yb>fay and xb<fax+0.5 and xb>fax-0.5 and ba[j] ==1):
+                list[j].visible = False
+                #list.remove(list[j])
+                #list[j]=0
+                #del list[j]
+                #list[j]=1
+                ba[j]=0
+                print(j)
+                bullet.visible = False
+                del bullet
+                b=0
+            j=j+1
